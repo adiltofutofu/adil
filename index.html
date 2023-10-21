@@ -13,7 +13,7 @@ if (isset($_POST['who'])) {
 
 if (isset($_SESSION['who'])) {
     $who = $_SESSION['who'];
-    
+
     if (isset($_POST['human'])) {
         $human = $_POST['human'];
         $computer = rand(0, 2);
@@ -77,4 +77,3 @@ function check($computer, $human, $names) {
     ?>
 </body>
 </html>
-
