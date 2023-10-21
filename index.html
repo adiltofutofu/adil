@@ -1,66 +1,79 @@
 <?php
 session_start();
-$salt = 'XyZzy12*_';
-$stored_hash = '1a52e17fa899cf40fb04cfc42e6352f1';
 
-if (isset($_POST['who']) && isset($_POST['pass'])) {
-    $name = $_POST['who'];
-    $password = $_POST['pass'];
-
-    if (empty($name) || empty($password)) {
-        $error = "User name and password are required";
+if (isset($_POST['who'])) {
+    if (isset($_POST['pass']) && $_POST['pass'] == 'php123') {
+        $_SESSION['who'] = $_POST['who'];
+        header('Location: game.php');
+        return;
     } else {
-        $combined = $salt . $password;
-        $md5 = hash('md5', $combined);
-
-        if ($md5 === $stored_hash) {
-            $_SESSION['who'] = $name;
-        } else {
-            $error = "Incorrect password";
-        }
+        $error = "Incorrect password";
     }
 }
 
 if (isset($_SESSION['who'])) {
-    // Содержимое страницы игры
-    $names = ["Rock", "Paper", "Scissors"];
-    $result = "";
-
+    $who = $_SESSION['who'];
+    
     if (isset($_POST['human'])) {
         $human = $_POST['human'];
         $computer = rand(0, 2);
-        $result = check($computer, $human);
+        $names = array("Rock", "Paper", "Scissors");
+        $result = check($computer, $human, $names);
     }
-
-    function check($computer, $human) {
-        // Реализуйте функцию check() здесь
-    }
-
-    echo <<<HTML
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Rock Paper Scissors - Game</title>
-    </head>
-    <body>
-        <h1>Rock Paper Scissors</h1>
-        <!-- Форма игры и вывод результата -->
-    </body>
-    </html>
-HTML;
 } else {
-    // Содержимое страницы входа
-    echo <<<HTML
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Rock Paper Scissors - Login</title>
-    </head>
-    <body>
-        <h1>Welcome to Rock Paper Scissors</h1>
-        <!-- Форма входа и вывод ошибок -->
-    </body>
-    </html>
-HTML;
+    $who = '';
+    $error = '';
 }
+
+function check($computer, $human, $names) {
+    if ($computer == $human) {
+        return "Tie";
+    } elseif (($computer == 0 && $human == 1) || ($computer == 1 && $human == 2) || ($computer == 2 && $human == 0)) {
+        return "You Win";
+    } else {
+        return "You Lose";
+    }
+}
+
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock Paper Scissors</title>
+</head>
+<body>
+    <h1>Welcome to Rock Paper Scissors</h1>
+    <?php
+    if (isset($error)) {
+        echo "<p>$error</p>";
+    }
+    if (isset($_SESSION['who'])) {
+        echo "<form method='post'>
+            <label for='who'>User Name</label>
+            <input type='text' name='who' id='who' value='$who' size='40'><br>
+            <select name='human'>
+                <option value='0'>Rock</option>
+                <option value='1'>Paper</option>
+                <option value='2'>Scissors</option>
+                <option value='3'>Test</option>
+            </select>
+            <input type='submit' value='Play'>
+            <a href='?logout=1'>Logout</a>
+        </form>";
+
+        if (isset($result)) {
+            echo "<p>Your Play=" . $names[$human] . " Computer Play=" . $names[$computer] . " Result=$result</p>";
+        }
+    } else {
+        echo "<form method='post'>
+            <label for='who'>User Name</label>
+            <input type='text' name='who' id='who' value='$who' size='40'><br>
+            <label for='pass'>Password</label>
+            <input type='password' name='pass' id='pass' size='40'><br>
+            <input type='submit' value='Log In'>
+        </form>";
+    }
+    ?>
+</body>
+</html>
