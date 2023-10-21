@@ -1,0 +1,56 @@
+<?php
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['name'])) {
+    die("Name parameter missing");
+}
+
+// Define the possible plays
+$names = array("Rock", "Paper", "Scissors");
+
+// Check if the user clicked the "Logout" button
+if (isset($_POST['logout'])) {
+    header('Location: index.php');
+    return;
+}
+
+// Check if the user selected a play
+if (isset($_POST['human'])) {
+    $computer = rand(0, 2); // Random computer play
+    $human = $_POST['human'];
+    
+    // Calculate the game result using the check() function
+    $result = check($computer, $human);
+    
+    echo "Your Play={$names[$human]} Computer Play={$names[$computer]} Result=$result";
+}
+
+// Function to calculate the game result
+function check($computer, $human) {
+    // Add your code to determine the result (Tie, You Win, or You Lose)
+    // ...
+}
+
+// Display the game form
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock Paper Scissors Game</title>
+</head>
+<body>
+    <h1>Welcome, <?= htmlentities($_SESSION['name']) ?>, to Rock Paper Scissors</h1>
+    <form method="post">
+        <select name="human">
+            <option value="-1">Select Play</option>
+            <option value="0">Rock</option>
+            <option value="1">Paper</option>
+            <option value="2">Scissors</option>
+        </select>
+        <input type="submit" value="Play">
+        <input type="submit" name="logout" value="Logout">
+    </form>
+</body>
+</html>
