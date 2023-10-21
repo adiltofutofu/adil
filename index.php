@@ -34,7 +34,7 @@ if (isset($_SESSION['who'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rock Paper Scissors</title>
+    <title>7884526f</title>
     <!-- Ваш код здесь -->
 </head>
 <body>
