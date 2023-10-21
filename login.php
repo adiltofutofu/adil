@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>7884526f</title>
+    <title>Rock Paper Scissors - 7884526f</title>
 </head>
 <body>
     <h1>Please Log In</h1>
