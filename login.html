@@ -1,16 +1,52 @@
+<?php
+// Start the session
+session_start();
+
+// Define the salt and stored hash
+$salt = 'XyZzy12*_';
+$stored_hash = '1a52e17fa899cf40fb04cfc42e6352f1';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if the name and password fields are set
+    if (empty($_POST['who']) || empty($_POST['pass'])) {
+        $error = "User name and password are required";
+    } else {
+        // Hash the provided password
+        $hashed_password = hash('md5', $salt . $_POST['pass']);
+        
+        // Compare the hashed password with the stored hash
+        if ($hashed_password === $stored_hash) {
+            // Password is correct, redirect to game.php
+            $_SESSION['name'] = $_POST['who'];
+            header("Location: game.php");
+            return;
+        } else {
+            // Password is incorrect
+            $error = "Incorrect password";
+        }
+    }
+}
+
+// Display the login form
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>7884526f</title>
+    <title>Rock Paper Scissors Login</title>
 </head>
 <body>
-    <h1>Please Log In</h1>
+    <h1>Welcome to Rock Paper Scissors</h1>
     <form method="post">
-        <label for="who">User Name</label>
-        <input type="text" name="who" id="who" size="40"><br>
-        <label for="pass">Password</label>
-        <input type="password" name="pass" id="pass" size="40"><br>
+        <label for="who">Name:</label>
+        <input type="text" name="who" id="who"><br><br>
+        <label for="pass">Password:</label>
+        <input type="password" name="pass" id="pass"><br><br>
         <input type="submit" value="Log In">
     </form>
+    <?php
+    if (isset($error)) {
+        echo "<p>$error</p>";
+    }
+    ?>
 </body>
-</html> 
+</html>
